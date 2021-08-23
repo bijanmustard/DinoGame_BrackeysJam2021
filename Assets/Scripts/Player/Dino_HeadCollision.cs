@@ -9,12 +9,14 @@ using UnityEngine;
  */
 public class Dino_HeadCollision : MonoBehaviour
 {
-    Rigidbody rb;
+    public Rigidbody rb;
     Vector3 prevPos;
     public Vector3 vel;
     float velocityFloat;
     float velTime;
     float acceleration;
+    public static float forceDivisor = 5000f;
+    public float Acceleration { get { return acceleration; } }
 
     private void Awake()
     {
@@ -55,11 +57,11 @@ public class Dino_HeadCollision : MonoBehaviour
         {
             //get direction of hit relative to 
             Vector3 hitDir = collision.gameObject.transform.position - collision.contacts[0].point;
-            float force = PhysLib.GetForce(acceleration , rb.mass)/5000;
+            float force = PhysLib.GetForce(acceleration , rb.mass)/forceDivisor;
             force = Mathf.Clamp(force, 0, 45);
             Debug.Log(force);
             colRB.AddForce(hitDir * force,ForceMode.Impulse);
-            //colRB.AddRelativeTorque(new Vector3(5000, 5000, 1000),ForceMode.Impulse);
+            colRB.AddTorque(new Vector3(5000, 5000, 1000),ForceMode.Impulse);
         }
     }
 }
