@@ -16,6 +16,8 @@ public class Dino_Move : MonoBehaviour
     Rigidbody rb;
     Animator anim;
     Dino_Neck neck;
+    Dino_Bite bite;
+    GameObject grabbed = null;
 
     public float h, v;
     public Vector3 moveDir;
@@ -24,12 +26,14 @@ public class Dino_Move : MonoBehaviour
     float turnSpeed = 100f;
 
     bool isStrafe = false;
+    bool isBite = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         neck = GetComponent<Dino_Neck>();
+        bite = GetComponentInChildren<Dino_Bite>();
     }
 
     // Update is called once per frame
@@ -43,8 +47,16 @@ public class Dino_Move : MonoBehaviour
         if (Input.GetButtonDown("Strafe")) isStrafe = true;
         else if (Input.GetButtonUp("Strafe")) isStrafe = false;
         //1c. Biting
-        if (Input.GetButtonDown("Bite")) anim.SetTrigger("BiteDown");
-        else if (Input.GetButtonUp("Bite")) anim.SetTrigger("BiteUp"); 
+        if (Input.GetButtonDown("Bite"))
+        {
+            anim.SetTrigger("BiteDown");
+            isBite = true;
+        }
+        else if (Input.GetButtonUp("Bite"))
+        {
+            anim.SetTrigger("BiteUp");
+            isBite = false;
+        }
         //1d. Neck reset
         if (Input.GetButton("ResetNeck")) neck.ResetNeck();
 
@@ -53,16 +65,18 @@ public class Dino_Move : MonoBehaviour
         if (isStrafe) moveDir += transform.right * h * speed;
         moveDir.y = rb.velocity.y;
         turnDir = new Vector3(0, h * turnSpeed, 0);
-        //3. Input
-       
-
-
-
     }
 
     private void FixedUpdate()
     {
         rb.velocity = moveDir;
         if(!isStrafe)rb.MoveRotation(Quaternion.Euler(transform.eulerAngles + turnDir * Time.fixedDeltaTime));
+    }
+
+    //BiteObj is called to hold onto a given object
+    public void BiteObj(GameObject obj)
+    {
+        //1. Set obj to grabbed
+        grabbed = obj;
     }
 }
