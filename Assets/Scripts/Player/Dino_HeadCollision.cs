@@ -12,9 +12,9 @@ public class Dino_HeadCollision : MonoBehaviour
     public Rigidbody rb;
     Vector3 prevPos;
     public Vector3 vel;
-    float velocityFloat;
+    public float velocityFloat;
     float velTime;
-    float acceleration;
+    public float acceleration;
     public static float forceDivisor = 5000f;
     public float Acceleration { get { return acceleration; } }
 
