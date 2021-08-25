@@ -15,7 +15,7 @@ public class Dino_Bite : MonoBehaviour
     Dino_HeadCollision headCol;
     public List<GameObject> grabbableObjs = new List<GameObject>();
     public GameObject nextToGrab = null;
-    GameObject grabbed = null;
+    public GameObject grabbed = null;
     bool canGrab = true;
   
     
@@ -31,20 +31,7 @@ public class Dino_Bite : MonoBehaviour
     {
         //1. Set next to grab based on which is closest to the radius
         if (grabbableObjs.Count < 1) nextToGrab = null;
-        else
-        {
-            GameObject closest = null;
-            foreach(GameObject gObj in grabbableObjs)
-            {
-                if (closest == null) closest = gObj;
-                else
-                {
-                    if (Vector3.Distance(gObj.transform.position, transform.position)
-                        < Vector3.Distance(closest.transform.position, transform.position)) closest = gObj;
-                }
-            }
-            nextToGrab = closest;
-        }
+        else nextToGrab = GetNextToGrab();
 
         //2. Get Input
         if (canGrab)
@@ -64,12 +51,36 @@ public class Dino_Bite : MonoBehaviour
 
     }
 
+    //SetNextToGrab is called to set nextToGrab.
+    GameObject GetNextToGrab()
+    {
+        
+        
+            GameObject closest = null;
+            foreach (GameObject gObj in grabbableObjs)
+            {
+                if (closest == null) closest = gObj;
+                else
+                {
+                    if (Vector3.Distance(gObj.transform.position, transform.position)
+                        < Vector3.Distance(closest.transform.position, transform.position)) closest = gObj;
+                }
+            }
+            return closest;
+        
+    }
+
     //GrabObj is called to grab a grabbable obj.
     protected void GrabObj(GameObject obj)
     {
         //1. Set grabbed ref
         grabbed = obj;
         //2. If rigidbody is present, lock constraints
+        if(obj.tag == "Caveman")
+        {
+            Caveman cMan = obj.GetComponentInParent<Caveman>();
+            cMan.ToggleRagdoll(true); 
+        }
         Rigidbody rb = grabbed.GetComponent<Rigidbody>();
         if(rb != null)
         {

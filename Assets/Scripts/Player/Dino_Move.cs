@@ -22,6 +22,7 @@ public class Dino_Move : MonoBehaviour
     public float h, v;
     public Vector3 moveDir;
     Vector3 turnDir;
+    [SerializeField]
     float speed = 50f;
     float turnSpeed = 100f;
 
@@ -45,14 +46,14 @@ public class Dino_Move : MonoBehaviour
         v = Input.GetAxis("Vertical");
         //1b. Strafe
         if (Input.GetButtonDown("Strafe")) isStrafe = true;
-        else if (Input.GetButtonUp("Strafe")) isStrafe = false;
+        if (Input.GetButtonUp("Strafe")) isStrafe = false;
         //1c. Biting
         if (Input.GetButtonDown("Bite"))
         {
             anim.SetTrigger("BiteDown");
             isBite = true;
         }
-        else if (Input.GetButtonUp("Bite"))
+        if (Input.GetButtonUp("Bite"))
         {
             anim.SetTrigger("BiteUp");
             isBite = false;

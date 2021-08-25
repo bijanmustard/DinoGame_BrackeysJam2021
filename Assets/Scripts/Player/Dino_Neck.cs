@@ -20,7 +20,7 @@ public class Dino_Neck : MonoBehaviour
     protected float xAngleMax = 14;
     protected float yAngleMin = -15;
     protected float yAngleMax = 15;
-    public float neckSpeed = 30;
+    public float neckSpeed = 50;
     
 
     private void Awake()
