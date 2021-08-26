@@ -23,8 +23,8 @@ public class Dino_Move : MonoBehaviour
     public Vector3 moveDir;
     Vector3 turnDir;
     [SerializeField]
-    float speed = 50f;
-    float turnSpeed = 100f;
+    float speed = 35f;
+    float turnSpeed = 70f;
 
     bool isStrafe = false;
     bool isBite = false;
