@@ -13,6 +13,7 @@ public class Dino_Neck : MonoBehaviour
     Transform armature;
     Transform n1, n2, n3, n4, n5, n6;
     Transform[] neck;
+    Rigidbody[] rbs;
 
     float sensitivity = 0.5f;
     float mouseX, mouseY;
@@ -22,7 +23,10 @@ public class Dino_Neck : MonoBehaviour
     public static float yAngleMin = -15;
     public static float yAngleMax = 15;
     public float neckSpeed = 50;
-    
+
+    Quaternion rotTo;
+
+
 
     private void Awake()
     {
@@ -34,7 +38,16 @@ public class Dino_Neck : MonoBehaviour
         n5 = n4.GetChild(0);
         n6 = n5.GetChild(0);
         neck = new Transform[] { n1, n2, n3, n4, n5, n6 };
-        //Start(NeckIE());
+        rbs = new Rigidbody[]{ n1.GetComponent<Rigidbody>(), n2.GetComponent<Rigidbody>(), n3.GetComponent<Rigidbody>(),
+        n4.GetComponent<Rigidbody>(), n5.GetComponent<Rigidbody>(), n6.GetComponent<Rigidbody>()};
+        
+        foreach(Rigidbody r1 in rbs)
+        {
+            foreach(Rigidbody r2 in rbs)
+            {
+                Physics.IgnoreCollision(r1.GetComponent<Collider>(), r2.GetComponent<Collider>());
+            }
+        }
     }
 
 
@@ -48,7 +61,7 @@ public class Dino_Neck : MonoBehaviour
         foreach (Transform t in neck)
         {
             //Vector3 rotTo = new Vector3(mX, 0, -mY);
-            Quaternion rotTo = Quaternion.identity * Quaternion.Euler(mX, 0, -mY);
+            rotTo = Quaternion.identity * Quaternion.Euler(mX, 0, -mY);
             if (t == n1) rotTo = rotTo * Quaternion.Euler(90, 0, 0);
             //if (t == n1) rotTo += new Vector3(mX, 0, -mY) + new Vector3(90, 0, 0);            
             //t.localEulerAngles = rotTo;
@@ -57,19 +70,14 @@ public class Dino_Neck : MonoBehaviour
 
     }
 
-    IEnumerator NeckIE()
+    private void FixedUpdate()
     {
         foreach (Transform t in neck)
         {
-            //Vector3 rotTo = new Vector3(mX, 0, -mY);
-            Quaternion rotTo = Quaternion.identity * Quaternion.Euler(mX, 0, -mY);
-            if (t == n1) rotTo = rotTo * Quaternion.Euler(90, 0, 0);
-            //if (t == n1) rotTo += new Vector3(mX, 0, -mY) + new Vector3(90, 0, 0);            
-            //t.localEulerAngles = rotTo;
-            t.localRotation = Quaternion.Slerp(t.localRotation, rotTo, 5f * Time.deltaTime);
-            yield return new WaitForSeconds(0.1f);
+            Rigidbody rb = t.GetComponent<Rigidbody>();
+            Quaternion rotation = Quaternion.Slerp(rb.rotation, rotTo, 5f * Time.deltaTime);
+            //rb.MoveRotation(rotation.normalized);
         }
-        yield return null;
     }
 
     //ResetNeck resets neck to its default position.

@@ -6,14 +6,15 @@ using UnityEngine.UI;
 /*
  * Code © Bijan Pourmand
  * Authored 8/25/21
- * Script for DBGUI fps counter
+ * Script for DBGUI
  */
 
-public class DBGUI_FPS : DBGUI
+public class DBGUI: MonoBehaviour
 {
+    protected Text myText;
 
-    private void Update()
+    private void Awake()
     {
-        myText.text = (1f / Time.deltaTime).ToString(); ;
+        myText = GetComponent<Text>();
     }
 }
