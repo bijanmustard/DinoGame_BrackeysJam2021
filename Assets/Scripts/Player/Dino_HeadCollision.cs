@@ -10,6 +10,9 @@ using UnityEngine;
 public class Dino_HeadCollision : MonoBehaviour
 {
     public Rigidbody rb;
+    Dino_Move move;
+    Dino_Neck neck;
+
     Vector3 prevPos;
     public Vector3 vel;
     public float velocityFloat;
@@ -21,6 +24,7 @@ public class Dino_HeadCollision : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        move = GetComponentInParent<Dino_Move>();
     }
 
     private void Update()
@@ -33,6 +37,7 @@ public class Dino_HeadCollision : MonoBehaviour
     private void FixedUpdate()
     {
         vel = rb.velocity;
+        //move.canMove = true;
     }
 
     private void LateUpdate()
@@ -51,6 +56,7 @@ public class Dino_HeadCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("BONK");
         //Add force to collidable obj
         Rigidbody colRB = collision.gameObject.GetComponent<Rigidbody>();
         if (colRB != null)
@@ -63,5 +69,7 @@ public class Dino_HeadCollision : MonoBehaviour
             colRB.AddForce(hitDir * force,ForceMode.Impulse);
             colRB.AddTorque(new Vector3(5000, 5000, 1000),ForceMode.Impulse);
         }
+
+      
     }
 }

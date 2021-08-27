@@ -28,6 +28,7 @@ public class Dino_Move : MonoBehaviour
 
     bool isStrafe = false;
     bool isBite = false;
+    public bool canMove = true;
 
     private void Awake()
     {
@@ -40,38 +41,44 @@ public class Dino_Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //1. Get input
-        //1a. Horizontal/Vertical
-        h = Input.GetAxis("Horizontal");
-        v = Input.GetAxis("Vertical");
-        //1b. Strafe
-        if (Input.GetButtonDown("Strafe")) isStrafe = true;
-        if (Input.GetButtonUp("Strafe")) isStrafe = false;
-        //1c. Biting
-        if (Input.GetButtonDown("Bite"))
+        if (canMove)
         {
-            anim.SetTrigger("BiteDown");
-            isBite = true;
-        }
-        if (Input.GetButtonUp("Bite"))
-        {
-            anim.SetTrigger("BiteUp");
-            isBite = false;
-        }
-        //1d. Neck reset
-        if (Input.GetButton("ResetNeck")) neck.ResetNeck();
+            //1. Get input
+            //1a. Horizontal/Vertical
+            h = Input.GetAxis("Horizontal");
+            v = Input.GetAxis("Vertical");
+            //1b. Strafe
+            if (Input.GetButtonDown("Strafe")) isStrafe = true;
+            if (Input.GetButtonUp("Strafe")) isStrafe = false;
+            //1c. Biting
+            if (Input.GetButtonDown("Bite"))
+            {
+                anim.SetTrigger("BiteDown");
+                isBite = true;
+            }
+            if (Input.GetButtonUp("Bite"))
+            {
+                anim.SetTrigger("BiteUp");
+                isBite = false;
+            }
+            //1d. Neck reset
+            if (Input.GetButton("ResetNeck")) neck.ResetNeck();
 
-        //2. Set moveDir & turnDir
-        moveDir = transform.forward * v * speed;
-        if (isStrafe) moveDir += transform.right * h * speed;
-        moveDir.y = rb.velocity.y;
-        turnDir = new Vector3(0, h * turnSpeed, 0);
+            //2. Set moveDir & turnDir
+            moveDir = transform.forward * v * speed;
+            if (isStrafe) moveDir += transform.right * h * speed;
+            moveDir.y = rb.velocity.y;
+            turnDir = new Vector3(0, h * turnSpeed, 0);
+        }
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = moveDir;
-        if(!isStrafe)rb.MoveRotation(Quaternion.Euler(transform.eulerAngles + turnDir * Time.fixedDeltaTime));
+        if (canMove)
+        {
+            rb.velocity = moveDir;
+            if (!isStrafe) rb.MoveRotation(Quaternion.Euler(transform.eulerAngles + turnDir * Time.fixedDeltaTime));
+        }
     }
 
     //BiteObj is called to hold onto a given object

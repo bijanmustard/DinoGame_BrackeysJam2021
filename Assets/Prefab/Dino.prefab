@@ -650,7 +650,7 @@ MonoBehaviour:
   h: 0
   v: 0
   moveDir: {x: 0, y: 0, z: 0}
-  speed: 50
+  speed: 20
 --- !u!95 &858265866070041382
 Animator:
   serializedVersion: 3

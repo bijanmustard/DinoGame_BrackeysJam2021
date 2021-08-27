@@ -72,12 +72,7 @@ public class Dino_Neck : MonoBehaviour
 
     private void FixedUpdate()
     {
-        foreach (Transform t in neck)
-        {
-            Rigidbody rb = t.GetComponent<Rigidbody>();
-            Quaternion rotation = Quaternion.Slerp(rb.rotation, rotTo, 5f * Time.deltaTime);
-            //rb.MoveRotation(rotation.normalized);
-        }
+        
     }
 
     //ResetNeck resets neck to its default position.
