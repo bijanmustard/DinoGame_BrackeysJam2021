@@ -16,6 +16,7 @@ public class Dino_Bite : MonoBehaviour
     public List<GameObject> grabbableObjs = new List<GameObject>();
     public GameObject nextToGrab = null;
     public GameObject grabbed = null;
+    protected Transform grabbed_parent = null;
     bool canGrab = true;
   
     
@@ -29,10 +30,12 @@ public class Dino_Bite : MonoBehaviour
 
     private void Update()
     {
-        //1. Set next to grab based on which is closest to the radius
-        if (grabbableObjs.Count < 1) nextToGrab = null;
+        //Scrub array for null refs
+        foreach (GameObject obj in grabbableObjs) if (obj == null) grabbableObjs.Remove(obj);
+            //1. Set next to grab based on which is closest to the radius
+            if (grabbableObjs.Count < 1) nextToGrab = null;
         else nextToGrab = GetNextToGrab();
-
+        
         //2. Get Input
         if (canGrab)
         {
@@ -47,7 +50,8 @@ public class Dino_Bite : MonoBehaviour
             }
 
         }
-       
+
+
 
     }
 
@@ -75,8 +79,9 @@ public class Dino_Bite : MonoBehaviour
     {
         //1. Set grabbed ref
         grabbed = obj;
+
         //2. If rigidbody is present, lock constraints
-        if(obj.tag == "Caveman")
+        if (obj.tag == "Caveman")
         {
             Caveman cMan = obj.GetComponentInParent<Caveman>();
             cMan.ToggleRagdoll(true); 
@@ -88,14 +93,17 @@ public class Dino_Bite : MonoBehaviour
             rb.isKinematic = true;
         }
         //3. Parent to bite
+        grabbed_parent = grabbed.transform.parent;
         grabbed.transform.parent = transform;
+
     }
 
     //ReleaseObj is called to release the current grabbed obj.
-    protected void ReleaseGrabbed()
+    public void ReleaseGrabbed()
     {
         //1. De-parent grabbed
-        grabbed.transform.parent = null;
+        grabbed.transform.parent = grabbed_parent;
+        grabbed_parent = null;
         //2. If rigidbody, release constraints
         Rigidbody rb = grabbed.GetComponent<Rigidbody>();
         if(rb != null)

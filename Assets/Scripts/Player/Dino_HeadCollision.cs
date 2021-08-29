@@ -65,7 +65,7 @@ public class Dino_HeadCollision : MonoBehaviour
             Vector3 hitDir = collision.gameObject.transform.position - collision.contacts[0].point;
             float force = PhysLib.GetForce(acceleration , rb.mass)/forceDivisor;
             force = Mathf.Clamp(force, 0, 45);
-            Debug.Log(force);
+            //Debug.Log(force);
             colRB.AddForce(hitDir * force,ForceMode.Impulse);
             colRB.AddTorque(new Vector3(5000, 5000, 1000),ForceMode.Impulse);
         }

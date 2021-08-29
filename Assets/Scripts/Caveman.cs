@@ -13,6 +13,11 @@ public class Caveman : MonoBehaviour
     Rigidbody rb;
     Dino_Move player;
     Collider capsule;
+    Caveman_Icon icon;
+
+    AudioSource audio;
+    [SerializeField]
+    public AudioClip hit;
 
     public Vector3 moveDir;
     float speed = 500f;
@@ -20,7 +25,8 @@ public class Caveman : MonoBehaviour
     public float distToPlayer;
     float triggerDist = 30f;
     public bool isRunning = false;
-    protected bool isRagdoll = false;
+    public bool isRagdoll = false;
+    bool isPerish = false;
 
     private void Awake()
     {
@@ -28,6 +34,8 @@ public class Caveman : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         player = FindObjectOfType<Dino_Move>();
         capsule = GetComponent<Collider>();
+        icon = GetComponentInChildren<Caveman_Icon>();
+        audio = GetComponentInChildren<AudioSource>();
         // 2. Set capsule to ignore collision with ragdoll colliders
         foreach(Collider col in transform.GetChild(0).GetComponentsInChildren<Collider>())
         {
@@ -50,8 +58,13 @@ public class Caveman : MonoBehaviour
             if (distToPlayer <= triggerDist)
             {
                 isRunning = true;
+                icon.SetIcon("Alert");
             }
-            else isRunning = false;
+            else
+            {
+                isRunning = false;
+                icon.SetIcon("None");
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.R)) ToggleRagdoll(true);
@@ -62,6 +75,7 @@ public class Caveman : MonoBehaviour
     {
         if (isRunning)
         {
+            
             moveDir = (transform.position - player.transform.position).normalized;
             moveDir.y = 0;
             Debug.DrawRay(transform.position, moveDir * 10f, Color.red);
@@ -89,11 +103,37 @@ public class Caveman : MonoBehaviour
         {
             r.isKinematic = !tog;
         }
+        //3. Set icon
+        if (tog) icon.SetIcon("KO");
     
         isRagdoll = tog;
         Debug.Log("Ragdoll is " + isRagdoll);
 
     }
+
+    //Perish is called to destroy the caveman
+    //True == by cage, false = by flame
+    public void Perish()
+    {
+        if (!isPerish)
+        {
+            isPerish = true;
+            LevelController.Current.AddCavemanCt(false);
+            Dino_Bite bite = FindObjectOfType<Dino_Bite>();
+            if (bite != null && bite.grabbed == gameObject) bite.ReleaseGrabbed();
+            Destroy(gameObject);
+        }
+    }
+
+    //PlaySound plays a sound from the caveman's audio source.
+    public void PlaySound(AudioClip clip)
+    {
+        Debug.Log("Playing sound");
+        audio.clip = clip;
+        Debug.Log(audio.clip);
+        audio.Play();
+    }
+
 
 
 }
