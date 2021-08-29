@@ -6,6 +6,6 @@ public class WinTrigger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player") GameController.WinGame();
+        if (other.tag == "Player") LevelController.WinGame();
     }
 }

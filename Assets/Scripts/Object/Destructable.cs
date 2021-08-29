@@ -70,7 +70,7 @@ public class Destructable : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(name + " hit " + collision.gameObject.name);
+        //Debug.Log(name + " hit " + collision.gameObject.name);
         //1. If player collides, toggle collapse
         if(collision.gameObject.tag == "Player")
         {

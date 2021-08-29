@@ -11,45 +11,52 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public static bool gameStart;
-    public static bool gameEnd;
-    protected static bool gameWon;
-    protected static bool gameLost;
+    public static GameMode curMode = GameMode.Menu;
+    
 
-
-    //WinGame is called to trigger winning the game.
-    public static void WinGame()
+    //Set Game Mode sets the game mode, toggling cursor accordingly.
+    public static void SetGameMode(GameMode mode)
     {
-        if (!gameEnd)
+        //1. Set cur mode
+        curMode = mode;
+        //2. Toggle cursor depending on mode
+        if(curMode == GameMode.Game)
         {
-            gameWon = true;
-            gameLost = false;
-            gameEnd = true;
-            OnGameWon();
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
-    //OnGameWon is the sequence of events for winning the game.
-    protected static void OnGameWon() {
-        Debug.Log("Game won!");
-        SceneManager.LoadScene("Credits");
-
-    }
-
-    //GameOver is called when the player has a game over.
-    public static void GameOver()
+    //StartGame is called to start the game
+    public static void StartGame()
     {
-        if (!gameEnd)
-        {
-            gameLost = true;
-            gameWon = false;
-            gameEnd = true;
-            OnGameOver();
-        }
+        //1. Load main scene
+        SetGameMode(GameMode.Game);
+        SceneManager.LoadScene("Level1");
     }
-    //OnGameOver is the sequence of events for losing the game.
-    protected static void OnGameOver() {
-        Debug.Log("Game Over :(");
+
+    //ReturnToMenu returns to the main menu.
+    public static void ReturnToMenu()
+    {
         SceneManager.LoadScene("Title_Screen");
+        SetGameMode(GameMode.Menu);
     }
+
+    //ToCredits takes the player to the credits scene.
+    public static void ToCredits()
+    {
+        SceneManager.LoadScene("Credits");
+        SetGameMode(GameMode.Menu);
+    }
+}
+
+public enum GameMode
+{
+    Menu,
+    Game
 }

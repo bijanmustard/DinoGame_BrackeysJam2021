@@ -6,6 +6,6 @@ public class LoseTrigger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player") GameController.GameOver();
+        if (other.tag == "Player") LevelController.GameOver();
     }
 }
