@@ -10,13 +10,13 @@ using UnityEngine;
 
 public class Dino_Neck : MonoBehaviour
 {
-    Transform armature;
-    Transform n1, n2, n3, n4, n5, n6;
-    Transform[] neck;
-    Rigidbody[] rbs;
+    protected Transform armature;
+    protected Transform n1, n2, n3, n4, n5, n6;
+    protected Transform[] neck;
+    protected Rigidbody[] rbs;
 
-    float sensitivity = 0.5f;
-    float mouseX, mouseY;
+    protected float sensitivity = 0.5f;
+    protected float mouseX, mouseY;
     public float mX, mY;
     public static float xAngleMin = -14;
     public static float xAngleMax = 14;
@@ -24,7 +24,8 @@ public class Dino_Neck : MonoBehaviour
     public static float yAngleMax = 15;
     public float neckSpeed = 50;
 
-    Quaternion rotTo;
+    public Quaternion rotTo;
+    public bool isCollision = false;
 
 
 
@@ -65,15 +66,12 @@ public class Dino_Neck : MonoBehaviour
             if (t == n1) rotTo = rotTo * Quaternion.Euler(90, 0, 0);
             //if (t == n1) rotTo += new Vector3(mX, 0, -mY) + new Vector3(90, 0, 0);            
             //t.localEulerAngles = rotTo;
+           
             t.localRotation = Quaternion.Slerp(t.localRotation, rotTo, 5f * Time.deltaTime);
         }
 
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
 
     //ResetNeck resets neck to its default position.
     public void ResetNeck()
